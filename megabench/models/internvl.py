@@ -50,7 +50,7 @@ class InternVL(OpenAI):
             pathlib.Path(__file__).resolve().parent / "config.json"
         )
         self.tokenizer = AutoTokenizer.from_pretrained(model, trust_remote_code=True)
-
+        self.model_name = model
         self.llm = LLM(
             model=model,
             max_num_seqs=8,
@@ -159,7 +159,7 @@ class InternVL(OpenAI):
                 # Do not update the image patching strategy if in single-image setting
                 # (all tasks will use only one image)
                 self._set_patch_strategy(images)
-                if "InternVL3" in self.model and task_name in [
+                if "InternVL3" in self.model_name and task_name in [
                     "painting_QA", "code_translation_hard", 
                     "counting_multi_image", "character_recognition_in_TV_shows",
                     "chess_puzzles_equality", "multi_contain_position_only", 
@@ -172,7 +172,7 @@ class InternVL(OpenAI):
                 prompt = self.tokenizer.apply_chat_template(
                     message, tokenize=False, add_generation_prompt=True
                 )
-                if "InternVL3" in self.model:
+                if "InternVL3" in self.model_name:
                     stop_tokens = ["<|endoftext|>", "<|im_start|>", "<|im_end|>", "<|quad_end|>", "<|vision_end|>"]
                 else:
                     stop_tokens = ["<|endoftext|>", "<|im_start|>", "<|im_end|>", "<|end|>"]
